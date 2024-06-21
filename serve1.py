@@ -8,13 +8,18 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.prebuilt import create_react_agent
 import dotenv
 from langgraph.checkpoint import MemorySaver
+from langchain_community.tools.tavily_search import TavilySearchResults
 
 dotenv.load_dotenv()
-memory = SqliteSaver.from_conn_string(":memory:")
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 vectorstore = Chroma(persist_directory="./chroma_db", embedding_function=OpenAIEmbeddings())
 retriever = vectorstore.as_retriever()
+
+
+
+search = TavilySearchResults(max_results=2)
+
 
 ### Build retriever tool ###
 tool = create_retriever_tool(
@@ -22,9 +27,9 @@ tool = create_retriever_tool(
     "blog_post_retriever",
     "Searches and returns excerpts from the Autonomous Agents blog post.",
 )
-tools = [tool]
+tools = [tool, search]
 
-system_message = "You are a helpful assistant with access to a tool."
+system_message = "You are a helpful assistant with access to two tools."
 agent_executor = create_react_agent(llm, tools, checkpointer=MemorySaver(), messages_modifier=system_message)
 
 
@@ -41,7 +46,7 @@ add_routes(
     path="/my_runnable",
 )
 
+
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="localhost", port=8000)
