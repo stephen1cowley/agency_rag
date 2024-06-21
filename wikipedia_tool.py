@@ -2,12 +2,14 @@ from langchain_community.tools import WikipediaQueryRun
 from langchain_community.utilities import WikipediaAPIWrapper
 from langchain_core.pydantic_v1 import BaseModel, Field
 
+
 class WikiInputs(BaseModel):
     """Inputs to the wikipedia tool."""
 
     query: str = Field(
         description="query to look up on wikipedia"
     )
+
 
 api_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=10000, load_all_available_meta=True)
 
@@ -25,11 +27,10 @@ wikipedia_tool = WikipediaQueryRun(
 )
 
 
-print(f"Name: {wikipedia_tool.name}")
-print(f"Description: {wikipedia_tool.description}")
-print(f"args schema: {wikipedia_tool.args}")
-print(f"returns directly?: {wikipedia_tool.return_direct}")
+if __name__ == "__main__":
+    print(f"Name: {wikipedia_tool.name}")
+    print(f"Description: {wikipedia_tool.description}")
+    print(f"args schema: {wikipedia_tool.args}")
+    print(f"returns directly?: {wikipedia_tool.return_direct}")
 
-
-docs = wikipedia_tool.invoke({"query": "Arithmetic coding"})
-
+    print(wikipedia_tool.invoke({"query": "Arithmetic coding"}))
