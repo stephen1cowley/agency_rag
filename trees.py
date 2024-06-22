@@ -84,7 +84,3 @@ class TreeNode:
 
             for answer in keys[1:]:
                 self.children[answer] = TreeNode(decision_tree[answer])
-
-
-the_tree = TreeNode(test_tree)
-print(the_tree.children)
