@@ -1,4 +1,5 @@
 import requests
+import random
 from langchain_core.messages import AIMessage, HumanMessage
 
 query = "What's the weather like today?"
@@ -12,7 +13,7 @@ payload = {
     },
     "config":{
         "configurable":{
-            "thread_id":"thread1748933"
+            "thread_id":f"thread1748{random.randint(1,1000)}"
         }
     }
 }
